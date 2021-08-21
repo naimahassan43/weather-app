@@ -20,7 +20,18 @@ const getDataByCity = async (city) => {
   const endPoint = `${weatherEndPoint}&q=${city}`;
   const request = await fetch(endPoint);
   const data = await request.json();
-  console.log(data);
+  return data;
+  //   console.log(data);
 };
 
-getDataByCity("Dhaka");
+// getDataByCity("Dhaka");
+
+//Search functionality
+searchInput.addEventListener("keydown", async (e) => {
+  //   console.log(e);
+  const cityName = searchInput.value;
+  if (e.keyCode === 13) {
+    const cityData = await getDataByCity(cityName);
+    console.log(cityData);
+  }
+});
