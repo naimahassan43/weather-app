@@ -43,4 +43,7 @@ searchInput.addEventListener("keydown", async (e) => {
 
 const updateWeather = (data) => {
   city.textContent = `${data.name}, ${data.sys.country}`;
+  day.textContent = new Date().toLocaleDateString("en-EN", {
+    weekday: "long",
+  });
 };
