@@ -21,7 +21,7 @@ const getDataByCity = async (city) => {
   const request = await fetch(endPoint);
   const data = await request.json();
   return data;
-  //   console.log(data);
+  console.log(data);
 };
 
 // getDataByCity("Dhaka");
@@ -32,6 +32,15 @@ searchInput.addEventListener("keydown", async (e) => {
   const cityName = searchInput.value;
   if (e.keyCode === 13) {
     const cityData = await getDataByCity(cityName);
+    updateWeather(cityData);
     console.log(cityData);
   }
 });
+
+// Render Functions
+
+//Updating the current weather
+
+const updateWeather = (data) => {
+  city.textContent = `${data.name}, ${data.sys.country}`;
+};
