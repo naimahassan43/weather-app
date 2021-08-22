@@ -47,5 +47,20 @@ const updateWeather = (data) => {
     weekday: "long",
   });
   humidity.textContent = data.main.humidity;
+  wind.textContent = `${calcWindDir(data.wind.deg)}, ${data.wind.speed}`;
   pressure.textContent = data.main.pressure;
+};
+
+//calculating wind direction
+
+const calcWindDir = (deg) => {
+  if (deg > 45 && deg <= 135) {
+    return "East";
+  } else if (deg > 135 && deg <= 225) {
+    return "South";
+  } else if (deg > 225 && deg <= 315) {
+    return "West";
+  } else {
+    return "North";
+  }
 };
