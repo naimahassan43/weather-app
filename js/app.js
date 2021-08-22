@@ -86,7 +86,7 @@ const getForecastData = async (id) => {
       dailyTemp.push(day);
     }
   });
-  console.log(dailyTemp);
+  updateForecast(dailyTemp);
 };
 //Search functionality
 searchInput.addEventListener("keydown", async (e) => {
@@ -123,6 +123,33 @@ const updateWeather = (data) => {
     if (obj.ids.includes(imgId)) {
       image.src = obj.url;
     }
+  });
+};
+
+//Updating the 5-day forecast
+const updateForecast = (data) => {
+  forecastBlock.innerHTML = "";
+  data.forEach((day) => {
+    let iconUrl = ` http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
+    let dayName = dayOfWeek(day.dt * 1000);
+    let temp =
+      day.main.temp >= 0
+        ? `+${Math.round(day.main.temp)}`
+        : `-${Math.round(day.main.temp)}`;
+    let forecastElem = `
+            <article class="weather__forecast__item">
+              <img
+                  src="${iconUrl}"
+                  alt="${day.weather[0].description}"
+                  class="weather__forecast__icon"
+              />
+              <h3 class="weather__forecast__day">${dayName}</h3>
+              <p class="weather__forecast__temperature">
+                  <span class="value">${temp}</span> &deg;C
+              </p>
+          </article>
+    `;
+    forecastBlock.insertAdjacentHTML("beforeend", forecastElem);
   });
 };
 //Day of Week
