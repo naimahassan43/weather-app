@@ -46,4 +46,6 @@ const updateWeather = (data) => {
   day.textContent = new Date().toLocaleDateString("en-EN", {
     weekday: "long",
   });
+  humidity.textContent = data.main.humidity;
+  pressure.textContent = data.main.pressure;
 };
