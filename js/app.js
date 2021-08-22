@@ -12,6 +12,7 @@ const forecastBlock = document.querySelector(".weather__forecast");
 //Api endpoint
 const weatherApiKey = "ab71f09d1c46c7344587c67407c9583e";
 const weatherEndPoint = `https://api.openweathermap.org/data/2.5/weather?units=metric&appid=${weatherApiKey}`;
+const forecastEndPoint = `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${weatherApiKey}`;
 
 //Image Icons data
 const weatherImages = [
@@ -65,18 +66,39 @@ const getDataByCity = async (city) => {
   const request = await fetch(endPoint);
   const data = await request.json();
   return data;
-  console.log(data);
+  // console.log(data);
 };
 
 // getDataByCity("Dhaka");
 
+//Get Forecast data by city id
+
+const getForecastData = async (id) => {
+  const endpoint = `${forecastEndPoint}&id=${id}`;
+  const result = await fetch(endpoint);
+  const forecast = await result.json();
+  const forecastList = forecast.list;
+  const dailyTemp = [];
+  forecastList.forEach((day) => {
+    let date = new Date(day.dt_txt.replace(" ", "T"));
+    let hours = date.getHours();
+    if (hours === 12) {
+      dailyTemp.push(day);
+    }
+  });
+  console.log(dailyTemp);
+};
 //Search functionality
 searchInput.addEventListener("keydown", async (e) => {
   //   console.log(e);
   const cityName = searchInput.value;
   if (e.keyCode === 13) {
     const cityData = await getDataByCity(cityName);
+    const cityId = cityData.id;
+
     updateWeather(cityData);
+    getForecastData(cityId);
+
     console.log(cityData);
     searchInput.value = "";
   }
@@ -88,9 +110,7 @@ searchInput.addEventListener("keydown", async (e) => {
 
 const updateWeather = (data) => {
   city.textContent = `${data.name}, ${data.sys.country}`;
-  day.textContent = new Date().toLocaleDateString("en-EN", {
-    weekday: "long",
-  });
+  day.textContent = dayOfWeek();
   humidity.textContent = data.main.humidity;
   wind.textContent = `${calcWindDir(data.wind.deg)}, ${data.wind.speed}`;
   pressure.textContent = data.main.pressure;
@@ -105,7 +125,12 @@ const updateWeather = (data) => {
     }
   });
 };
-
+//Day of Week
+const dayOfWeek = (dt = new Date().getTime()) => {
+  return new Date(dt).toLocaleDateString("en-EN", {
+    weekday: "long",
+  });
+};
 //calculating wind direction
 
 const calcWindDir = (deg) => {
