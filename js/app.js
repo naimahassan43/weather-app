@@ -34,6 +34,7 @@ searchInput.addEventListener("keydown", async (e) => {
     const cityData = await getDataByCity(cityName);
     updateWeather(cityData);
     console.log(cityData);
+    searchInput.value = "";
   }
 });
 
@@ -49,6 +50,10 @@ const updateWeather = (data) => {
   humidity.textContent = data.main.humidity;
   wind.textContent = `${calcWindDir(data.wind.deg)}, ${data.wind.speed}`;
   pressure.textContent = data.main.pressure;
+  temp.textContent =
+    data.main.temp >= 0
+      ? `+${Math.round(data.main.temp)}`
+      : `-${Math.round(data.main.temp)}`;
 };
 
 //calculating wind direction
