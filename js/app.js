@@ -72,10 +72,14 @@ const getDataByCity = async (cityString) => {
   } else {
     city = cityString;
   }
-  console.log(cityString);
-  console.log(city);
+
   const endPoint = `${weatherEndPoint}&q=${city}`;
   const request = await fetch(endPoint);
+  if (request.status !== 200) {
+    alert("Invalid city request");
+    searchInput.value = "";
+    return;
+  }
   const data = await request.json();
   return data;
   // console.log(data);
