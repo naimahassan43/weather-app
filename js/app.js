@@ -82,10 +82,7 @@ const getDataByCity = async (cityString) => {
   }
   const data = await request.json();
   return data;
-  // console.log(data);
 };
-
-// getDataByCity("Dhaka");
 
 //Get Forecast data by city id
 
@@ -104,18 +101,27 @@ const getForecastData = async (id) => {
   });
   updateForecast(dailyTemp);
 };
+
+const weatherForCity = async (city) => {
+  const cityData = await getDataByCity(city);
+  const cityId = cityData.id;
+
+  updateWeather(cityData);
+  getForecastData(cityId);
+};
+
+const init = () => {
+  weatherForCity("Milton Keynes");
+  document.body.style.filter = "blur(0)";
+};
+init();
 //Search functionality
 searchInput.addEventListener("keydown", async (e) => {
   //   console.log(e);
   const cityName = searchInput.value;
   if (e.keyCode === 13) {
-    const cityData = await getDataByCity(cityName);
-    const cityId = cityData.id;
+    weatherForCity(cityName);
 
-    updateWeather(cityData);
-    getForecastData(cityId);
-
-    console.log(cityData);
     searchInput.value = "";
   }
 });
@@ -133,7 +139,6 @@ searchInput.addEventListener("input", async () => {
     option.value = cityList[i].matching_full_name;
     suggestions.appendChild(option);
   }
-  console.log(result);
 });
 
 //***Render Functions* */
