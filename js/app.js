@@ -9,10 +9,12 @@ const pressure = document.querySelector(".weather__indicator--pressure>.value");
 const image = document.querySelector(".weather__image");
 const temp = document.querySelector(".weather__temperature>.value");
 const forecastBlock = document.querySelector(".weather__forecast");
+const suggestions = document.querySelector("#suggestions");
 //Api endpoint
 const weatherApiKey = "ab71f09d1c46c7344587c67407c9583e";
 const weatherEndPoint = `https://api.openweathermap.org/data/2.5/weather?units=metric&appid=${weatherApiKey}`;
 const forecastEndPoint = `https://api.openweathermap.org/data/2.5/forecast?units=metric&appid=${weatherApiKey}`;
+const cityBaseEndPoint = `https://api.teleport.org/api/cities/?search=`;
 
 //Image Icons data
 const weatherImages = [
@@ -61,7 +63,17 @@ const weatherImages = [
 //Fetch Data from Server
 
 //Get weather data by city name
-const getDataByCity = async (city) => {
+const getDataByCity = async (cityString) => {
+  let city;
+  if (cityString.includes(",")) {
+    city =
+      cityString.slice(0, cityString.indexOf(",")) +
+      cityString.slice(cityString.lastIndexOf(","));
+  } else {
+    city = cityString;
+  }
+  console.log(cityString);
+  console.log(city);
   const endPoint = `${weatherEndPoint}&q=${city}`;
   const request = await fetch(endPoint);
   const data = await request.json();
@@ -104,7 +116,23 @@ searchInput.addEventListener("keydown", async (e) => {
   }
 });
 
-// Render Functions
+//City suggestions functionality
+searchInput.addEventListener("input", async () => {
+  const endpoint = cityBaseEndPoint + searchInput.value;
+  const request = await fetch(endpoint);
+  const result = await request.json();
+  suggestions.innerHTML = "";
+  const cityList = result._embedded["city:search-results"];
+  const length = cityList.length > 7 ? 7 : cityList.length;
+  for (let i = 0; i < length; i++) {
+    const option = document.createElement("option");
+    option.value = cityList[i].matching_full_name;
+    suggestions.appendChild(option);
+  }
+  console.log(result);
+});
+
+//***Render Functions* */
 
 //Updating the current weather
 
